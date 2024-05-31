@@ -2,7 +2,8 @@ import ThemedTextInput from "@/components/form/ThemedTextInput";
 import { useSetting } from "@/contexts/SettingContext";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button, Keyboard } from "react-native";
+import { Keyboard } from "react-native";
+import ThemedButton from "../ThemedButton";
 
 /**
  * Component for editing the Frigate Server URL setting. Provides a text input for the URL and a save button.
@@ -46,7 +47,7 @@ export default function ServerSettings() {
   return (
     <>
       <ThemedTextInput value={serverUrl} onChange={setServerUrl} label="Server URL:" loading={anyLoading} />
-      <Button title="Save" onPress={() => { submitButton() }} color="#29323c" />
+      <ThemedButton title="Save" onPress={() => { submitButton() }} />
     </>
   )
 

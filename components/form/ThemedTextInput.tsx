@@ -1,3 +1,4 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { ActivityIndicator, StyleSheet, Text, TextInput, View } from "react-native";
 
 interface ThemedTextInputProps {
@@ -8,11 +9,13 @@ interface ThemedTextInputProps {
 }
 
 export default function ThemedTextInput({ label, value, onChange, loading = false }: ThemedTextInputProps) {
+  const textColor = useThemeColor({}, 'text');
+
   return (
     <View>
-      <Text style={styles.label} >{label}</Text>
+      <Text style={[styles.label, { color: textColor }]} >{label}</Text>
       <ActivityIndicator animating={loading} style={styles.activityIndicator} color="lightgray" />
-      <TextInput style={styles.input} value={value} onChangeText={onChange} inputMode="url" readOnly={loading} />
+      <TextInput style={[styles.input, { color: textColor }]} value={value} onChangeText={onChange} inputMode="url" readOnly={loading} />
     </View>
   );
 }
