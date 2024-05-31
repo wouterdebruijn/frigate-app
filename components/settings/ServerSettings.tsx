@@ -14,6 +14,8 @@ export default function ServerSettings() {
   const { data: savedServerUrl, isPending } = useSuspenseQuery({ ...queryServerUrl() });
   const [serverUrl, setServerUrl] = useState(savedServerUrl);
 
+  const hasChanged = savedServerUrl !== serverUrl;
+
   const anyLoading = isPending;
 
   /**
@@ -46,8 +48,8 @@ export default function ServerSettings() {
 
   return (
     <>
-      <ThemedTextInput value={serverUrl} onChange={setServerUrl} label="Server URL:" loading={anyLoading} />
-      <ThemedButton title="Save" onPress={() => { submitButton() }} />
+      <ThemedTextInput value={serverUrl} onChangeText={setServerUrl} label="Server URL:" loading={anyLoading} autoComplete="url" />
+      <ThemedButton title="Save" onPress={() => { submitButton() }} disabled={!hasChanged} />
     </>
   )
 
