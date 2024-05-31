@@ -1,28 +1,25 @@
 import { useSetting } from "@/contexts/SettingContext";
 import { configQuery } from "@/queries/config-query";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import ThemedButton from "../ThemedButton";
 import { ThemedText } from "../ThemedText";
-import { SkeletonCamera } from "../skeletons/SkeletonCamera";
+import SkeletonView from "../skeletons/SkeletonView";
 import CameraOptions from "./CameraOptions";
 
 
-export default function CameraSettings() {
+function CameraSettings() {
+
   const { queryServerUrl } = useSetting();
 
-  const { data: savedServerUrl } = useQuery({ ...queryServerUrl() });
-  const { data: cameras, error, isPending } = useQuery({ ...configQuery({ serverUrl: savedServerUrl! }), enabled: !!savedServerUrl })
+  const { data: savedServerUrl } = useSuspenseQuery({ ...queryServerUrl() });
+  const { data: camerasInitial, error, isPending } = useSuspenseQuery({ ...configQuery({ serverUrl: savedServerUrl! }) })
 
-  if (isPending) {
-    return (
-      <View style={styles.camerasWrapper}>
-        <ThemedText type="subtitle">Cameras: </ThemedText>
-        <SkeletonCamera />
-        <SkeletonCamera />
-        <SkeletonCamera />
-        <SkeletonCamera />
-      </View>
-    )
+  const [cameras, setCameras] = useState(camerasInitial)
+
+  async function submitButton() {
+
   }
 
   if (error) {
@@ -45,6 +42,22 @@ export default function CameraSettings() {
           })
         }
       </View>
+
+      <ThemedButton title="Save" onPress={() => submitButton()} />
+    </View>
+  )
+}
+
+function Skeleton() {
+  return (
+    <View>
+      <ThemedText type="subtitle">Cameras: 0</ThemedText>
+      <View style={styles.camerasWrapper}>
+        <CameraOptions.Skeleton />
+        <CameraOptions.Skeleton />
+      </View>
+
+      <SkeletonView style={{ width: '100%', height: 35 }} />
     </View>
   )
 }
@@ -52,7 +65,12 @@ export default function CameraSettings() {
 const styles = StyleSheet.create({
   camerasWrapper: {
     flex: 1,
-    gap: 15,
-    paddingTop: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 5,
+    paddingVertical: 10,
   }
 })
+
+CameraSettings.Skeleton = Skeleton;
+export default CameraSettings;

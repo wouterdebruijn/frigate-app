@@ -22,7 +22,7 @@ export default function Settings() {
         <ServerSettings />
       </Suspense>
 
-      <Suspense>
+      <Suspense fallback={<CameraSettings.Skeleton />}>
         <CameraSettings />
       </Suspense>
 

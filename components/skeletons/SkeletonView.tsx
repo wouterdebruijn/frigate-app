@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -10,7 +10,7 @@ import Animated, {
 
 export interface SkeletonViewProps {
   children?: React.ReactNode;
-  style: ViewStyle
+  style: StyleProp<ViewStyle>
 }
 
 export default function SkeletonView({ children, style }: SkeletonViewProps) {
@@ -30,17 +30,9 @@ export default function SkeletonView({ children, style }: SkeletonViewProps) {
 
   return (
     <Animated.View style={animatedStyle}>
-      <LinearGradient colors={['#f4f4f4', '#d0d0d0', '#f4f4f4']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[styles.skeleton, style]}>
+      <LinearGradient colors={['#f4f4f4', '#d0d0d0', '#f4f4f4']} start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }} style={[style]}>
         {children}
       </LinearGradient>
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  skeleton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});

@@ -19,10 +19,9 @@ export default function Home() {
         text={"Your Frigate Cameras"} />
       } headerBackgroundColor={{ dark: '#333', light: '#f4f4f4' }}>
 
-      <Suspense>
+      <Suspense fallback={<CameraSettings.Skeleton />}>
         <CameraSettings />
       </Suspense>
-
     </ParallaxScrollView>
   );
 }
