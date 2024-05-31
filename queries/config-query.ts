@@ -14,8 +14,6 @@ export function configQuery({ serverUrl }: ConfigQueryOptions) {
     queryFn: async () => {
       const response = await fetch(`${serverUrl}api/config`);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
       const data = await response.json();
       const cameras = Object.keys(data.cameras).map((key) => {
         return {
