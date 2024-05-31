@@ -12,28 +12,30 @@ interface ThemedParallaxHeaderProps {
 
 export default function ThemedParallaxHeader(props: ThemedParallaxHeaderProps) {
   return (
-    <LinearGradient colors={['#29323c', '#485563']} style={styles.container} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }}>
-      <MaterialCommunityIcons name={props.icon} size={42} color="white" />
-      <View style={styles.textContainer}>
-        <ThemedText type="title" style={{ lineHeight: 41 }} lightColor="white" darkColor="white">
-          {props.title}
-        </ThemedText>
-        <ThemedText lightColor="white" darkColor="white">{props.text}</ThemedText>
+    <LinearGradient colors={['#29323c', '#485563']} style={styles.wrapper} start={{ x: 0, y: 0.2 }} end={{ x: 1, y: 0.8 }}>
+      <View style={styles.container}>
+        <MaterialCommunityIcons name={props.icon} size={42} color="white" />
+        <View>
+          <ThemedText type="title" style={{ lineHeight: 41 }} lightColor="white" darkColor="white">
+            {props.title}
+          </ThemedText>
+          <ThemedText lightColor="white" darkColor="white">{props.text}</ThemedText>
+        </View>
       </View>
     </LinearGradient >
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
+  },
+  container: {
     alignItems: 'center',
     gap: 16,
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: 'transparent',
+    height: 100,
+    marginTop: 'auto'
   },
-  textContainer: {
-    flex: 1,
-  }
 });
