@@ -1,3 +1,4 @@
+import { useCamera } from "@/contexts/CameraContext";
 import { useSetting } from "@/contexts/SettingContext";
 import { configQuery } from "@/queries/config-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -16,10 +17,38 @@ function CameraSettings() {
   const { data: savedServerUrl } = useSuspenseQuery({ ...queryServerUrl() });
   const { data: camerasInitial, error, isPending } = useSuspenseQuery({ ...configQuery({ serverUrl: savedServerUrl! }) })
 
-  const [cameras, setCameras] = useState(camerasInitial)
+  const { setCameras: setCamerasInContext, cameras: camerasInContext } = useCamera();
 
-  async function submitButton() {
+  const [cameras, setCameras] = useState(camerasInitial.map((camera) => {
+    return {
+      name: camera.name,
+      group: 'default',
+      visible: true,
+      streamUrl: `${savedServerUrl}api/${camera.name}/stream`,
+      snapshotUrl: `${savedServerUrl}api/${camera.name}/latest.jpg`
+    }
+  }))
 
+  const hasChanged = camerasInContext.length !== cameras.length || cameras.some((camera, index) => {
+    return camera.name !== camerasInContext[index].name || camera.visible !== camerasInContext[index].visible;
+  })
+
+  async function onCameraPress(name: string) {
+    setCameras((prev) => {
+      return prev.map((camera) => {
+        if (camera.name === name) {
+          return {
+            ...camera,
+            visible: !camera.visible
+          }
+        }
+        return camera;
+      })
+    })
+  }
+
+  function submitButton() {
+    setCamerasInContext(cameras);
   }
 
   if (error) {
@@ -37,13 +66,15 @@ function CameraSettings() {
                 key={camera.name}
                 name={camera.name}
                 snapshot={`${savedServerUrl}api/${camera.name}/latest.jpg`}
+                visible={camera.visible}
+                onPress={() => onCameraPress(camera.name)}
               />
             )
           })
         }
       </View>
 
-      <ThemedButton title="Save" onPress={() => submitButton()} />
+      <ThemedButton title="Save" onPress={() => submitButton()} disabled={!hasChanged} />
     </View>
   )
 }

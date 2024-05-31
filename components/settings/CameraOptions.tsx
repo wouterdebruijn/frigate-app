@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Image, Pressable, StyleSheet, useWindowDimensions } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -9,15 +8,12 @@ import SkeletonView from "../skeletons/SkeletonView";
 export interface CameraOptionsProps {
   name: string;
   snapshot: string;
+  visible: boolean;
+  onPress?: () => void;
 }
 
-function CameraOptions({ name, snapshot }: CameraOptionsProps) {
-  const [visible, setVisible] = useState(false);
+function CameraOptions({ name, snapshot, visible, onPress }: CameraOptionsProps) {
   const { width } = useWindowDimensions();
-
-  function toggleVisible() {
-    setVisible(!visible);
-  }
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -27,7 +23,7 @@ function CameraOptions({ name, snapshot }: CameraOptionsProps) {
 
 
   return (
-    <Pressable style={styles.cameraContainer} onPress={toggleVisible}>
+    <Pressable style={styles.cameraContainer} onPress={onPress}>
       <Animated.View style={animatedStyle}>
         <Image source={{ uri: snapshot }} style={[styles.cameraSnapshot, { width: (width - 37) / 2 }]} />
       </Animated.View>
